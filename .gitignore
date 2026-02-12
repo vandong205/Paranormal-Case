@@ -1,0 +1,62 @@
+# ========== Unity ==========
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# Bỏ qua cache & dữ liệu phụ
+AssetBundles/
+Assets/AssetStoreTools*
+UserSettings/
+Recordings/
+ProfilerCaptures/
+*.data
+
+
+# Bỏ qua dữ liệu nén tự động sinh
+*.apk
+*.aab
+*.unitypackage
+
+# ========== Visual Studio / Rider ==========
+.vs/
+.idea/
+*.sln.iml
+
+# Build outputs
+[Bb]in/
+[Dd]ebug*/
+[Rr]elease*/
+x64/
+x86/
+[Aa][Rr][Mm]*/
+[Aa][Rr][Mm]64/
+
+# VS Generated files
+*.user
+*.userprefs
+*.csproj
+*.unityproj
+*.suo
+*.tmp
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ========== OS Files ==========
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+desktop.ini
+
+# ========== Crash / Logs ==========
+sysinfo.txt
+*.stacktrace

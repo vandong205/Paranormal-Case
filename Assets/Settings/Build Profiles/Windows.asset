@@ -19,7 +19,11 @@ MonoBehaviour:
   m_PlatformBuildProfile:
     rid: 5732639869664231650
   m_OverrideGlobalSceneList: 1
-  m_Scenes: []
+  m_Scenes:
+  - m_enabled: 1
+    m_path: Assets/Scenes/Intro.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Chapter2.unity
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
@@ -39,12 +43,11 @@ MonoBehaviour:
     - line: '|   productName: Paranormal Case'
     - line: '|   defaultCursor: {instanceID: 0}'
     - line: '|   cursorHotspot: {x: 0, y: 0}'
-    - line: '|   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b:
-        0.1254902, a: 1}'
-    - line: '|   m_ShowUnitySplashScreen: 1'
+    - line: '|   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}'
+    - line: '|   m_ShowUnitySplashScreen: 0'
     - line: '|   m_ShowUnitySplashLogo: 1'
     - line: '|   m_SplashScreenOverlayOpacity: 1'
-    - line: '|   m_SplashScreenAnimation: 1'
+    - line: '|   m_SplashScreenAnimation: 2'
     - line: '|   m_SplashScreenLogoStyle: 1'
     - line: '|   m_SplashScreenDrawMode: 0'
     - line: '|   m_SplashScreenBackgroundAnimationZoom: 1'
@@ -862,7 +865,25 @@ MonoBehaviour:
     - line: '|   webGLCloseOnQuit: 0'
     - line: '|   webWasm2023: 0'
     - line: '|   webEnableSubmoduleStrippingCompatibility: 0'
-    - line: '|   scriptingDefineSymbols: {}'
+    - line: '|   scriptingDefineSymbols:'
+    - line: '|     Android: DOTWEEN'
+    - line: '|     EmbeddedLinux: DOTWEEN'
+    - line: '|     GameCoreScarlett: DOTWEEN'
+    - line: '|     GameCoreXboxOne: DOTWEEN'
+    - line: '|     Kepler: DOTWEEN'
+    - line: '|     LinuxHeadlessSimulation: DOTWEEN'
+    - line: '|     Nintendo Switch: DOTWEEN'
+    - line: '|     Nintendo Switch 2: DOTWEEN'
+    - line: '|     PS4: DOTWEEN'
+    - line: '|     PS5: DOTWEEN'
+    - line: '|     QNX: DOTWEEN'
+    - line: '|     Standalone: DOTWEEN'
+    - line: '|     VisionOS: DOTWEEN'
+    - line: '|     WebGL: DOTWEEN'
+    - line: '|     Windows Store Apps: DOTWEEN'
+    - line: '|     XboxOne: DOTWEEN'
+    - line: '|     iPhone: DOTWEEN'
+    - line: '|     tvOS: DOTWEEN'
     - line: '|   additionalCompilerArguments: {}'
     - line: '|   platformArchitecture: {}'
     - line: '|   scriptingBackend:'

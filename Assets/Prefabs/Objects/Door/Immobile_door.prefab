@@ -106,7 +106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 11
+  m_text: 44
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -249,7 +249,6 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -3963241562183589234, guid: 6c9900f4c2d9caa47803e97c420b8b3d, type: 3}
-  - {fileID: 4418572348006011840, guid: 6c9900f4c2d9caa47803e97c420b8b3d, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -363,10 +362,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f82c36b7a272884787728c6314e0670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  outliner: {fileID: 4786000301409014070}
+  outliner: {fileID: 9052064621432878366}
   doorSign: {fileID: 0}
   canEditSign: 0
-  correctSignNumber: 11
+  correctSignNumber: 44
   labelNumber: {fileID: 7751934789652291829}
 --- !u!1 &9037175028872467655
 GameObject:
@@ -380,7 +379,7 @@ GameObject:
   - component: {fileID: 7202742016959604838}
   - component: {fileID: 5380477964871397417}
   - component: {fileID: 8104491937608850763}
-  - component: {fileID: 4786000301409014070}
+  - component: {fileID: 9052064621432878366}
   m_Layer: 0
   m_Name: Sign
   m_TagString: Untagged
@@ -482,7 +481,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4786000301409014070
+--- !u!114 &9052064621432878366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -491,12 +490,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9037175028872467655}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Script: {fileID: 11500000, guid: e69206fa99c016940a50d1329d1024b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
-  outlineMode: 1
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 1
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []

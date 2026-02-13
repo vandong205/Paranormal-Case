@@ -109,7 +109,7 @@ public class IntroController : MonoBehaviour
         overlayColor.a = 1f;
         blackOverlayImage.color = overlayColor;
 
-        SceneManager.LoadScene("Chapter2");
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void SetOverlayAlpha(float alpha)

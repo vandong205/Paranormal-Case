@@ -95,7 +95,7 @@ public class MainMenuController : MonoBehaviour
         {
             transitionLayerController.OpenCurtain(() =>
             {
-                SceneManager.LoadScene("Chapter2");
+                SceneManager.LoadScene("LoadingScene");
             });
         }
     }

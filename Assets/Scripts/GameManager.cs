@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public static event Action<float> OnLoadingProgressChanged;
-
+    private TransitionLayerController currentTransition;
     [SerializeField] private string sceneName = "Chapter2";
     private string targetSceneName;
 
@@ -106,5 +106,14 @@ public class GameManager : MonoBehaviour
         DataPersistanceManager.Instance.InitGameData();
 
         Debug.Log("Scene Initialized Safely");
+        if (currentTransition != null)
+        {
+            currentTransition.CloseCurtain();
+        }
     }
+ public void RegisterTransition(TransitionLayerController controller)
+{
+    currentTransition = controller;
+}
+
 }

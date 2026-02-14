@@ -6,6 +6,7 @@ public class TransitionLayerController : MonoBehaviour
     [SerializeField] private RectTransform maskRectTransform;
     [SerializeField] private float duration = 1f;
     [SerializeField] private Ease ease = Ease.OutCubic;
+    [SerializeField] private Vector3 startScale = new Vector3(0f, 1f, 1f);
 
     private Tween currentTween;
 
@@ -17,11 +18,15 @@ public class TransitionLayerController : MonoBehaviour
             enabled = false;
             return;
         }
+        maskRectTransform.localScale = startScale;
     }
-
-    /// <summary>
-    /// Mở màn chập (scale X từ 0 -> 1)
-    /// </summary>
+    void Start()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RegisterTransition(this);
+        }
+    }
     public void OpenCurtain()
     {
         KillCurrentTween();

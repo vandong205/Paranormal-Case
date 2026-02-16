@@ -1,7 +1,8 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour,ILivingEntity
+public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -59,6 +60,46 @@ public class Player : MonoBehaviour,ILivingEntity
         }
     }
 
+    public void LoadData(GameData gameData)
+    {
+        if (gameData == null) return;
+        Vector3 oldPos = transform.position;
+        Vector3 targetPosition = gameData.playerPosition.ToVector3();
+        transform.position = targetPosition; // set initial position before raycast to ensure correct raycast origin
+        if (Physics.Raycast(targetPosition + Vector3.up, Vector3.down, out RaycastHit hit, 10f))
+        {
+            targetPosition = hit.point;
+        }
+
+        if (rb != null)
+        {
+            rb.isKinematic = true; // Tạm ngắt physics
+
+            rb.position = targetPosition;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            rb.isKinematic = false;
+        }
+        else
+        {
+            transform.position = targetPosition;
+        }
+        CinemachineCamera cam = FindFirstObjectByType<CinemachineCamera>();
+        if (cam != null)
+        {
+            cam.OnTargetObjectWarped(transform, targetPosition - oldPos);
+        } 
+    }
+
+
+    public void SaveData(ref GameData gameData)
+    {
+        if (gameData == null) return;
+        Debug.Log("Saving player position: " + transform.position);
+        gameData.playerPosition = new SerializableVector3(transform.position);
+    }
+
     private void OnEnable()
     {
         if (moveAction != null)
@@ -109,7 +150,7 @@ public class Player : MonoBehaviour,ILivingEntity
 
     // Enable or disable player movement input/action.
     // When disabled, movement input is cleared and animation updated.
-    public void setMoveable(bool enabled)
+    public void SetMoveable(bool enabled)
     {
         if (moveable == enabled)
             return;
@@ -164,7 +205,7 @@ public class Player : MonoBehaviour,ILivingEntity
     public void Die()
     {
         m_isAlive = false;
-        setMoveable(false);
+        SetMoveable(false);
     }
     private void UpdateAnimation()
     {

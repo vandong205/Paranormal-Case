@@ -24,6 +24,7 @@ public class FileDataHandler
                 using StreamReader reader = new(stream);
                 dataToLoad = reader.ReadToEnd();
                 loadedData = JsonConvert.DeserializeObject<GameData>(dataToLoad);
+                Debug.Log("Game data loaded from: " + fullPath);
             }
             catch (Exception e)
             {
@@ -42,6 +43,7 @@ public class FileDataHandler
             using FileStream stream = new(fullPath, FileMode.Create);
             using StreamWriter writer = new(stream);
             writer.Write(dataToStore);
+            Debug.Log("Game data saved to: " + fullPath);
         }
         catch (Exception e)
         {

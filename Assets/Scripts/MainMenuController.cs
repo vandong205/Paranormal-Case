@@ -12,16 +12,15 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private float introDuration = 0.6f;
     [SerializeField] private float staggerDelay = 0.15f;
 
-    private void Start()
+    private async void Start()
     {
         SetupButton(StartButton, OnStartButtonClicked);
         SetupButton(OptionsButton, OnOptionsButtonClicked);
         SetupButton(ExitButton, OnExitButtonClicked);
-        if(GameDatabase.Instance != null && GameDatabase.Instance.musicDB != null)
-        {
-            SFXManager.Instance.PlayMusic(GameDatabase.Instance.musicDB.startMenuMusic);
-        }
         PlayIntroAnimation();
+        await SFXManager.Instance.PreloadMusic(GameDatabase.Instance.musicDB.startMenuMusic);
+        SFXManager.Instance.PlayMusic(GameDatabase.Instance.musicDB.startMenuMusic);
+        
     }
 
     private void SetupButton(GameObject buttonObj, UnityEngine.Events.UnityAction action)

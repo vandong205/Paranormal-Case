@@ -10,7 +10,7 @@ public class DataPersistanceManager : MonoBehaviour
     private DataPersistanceManager() { }
     public GameData gameData;
     private FileDataHandler dataHandler;
-    List<IDataPersistance> dataPersistanceObjects;
+    List<IDataPersistance> dataPersistanceObjects = new();
     private static DataPersistanceManager instance;
     public static DataPersistanceManager Instance
     {
@@ -42,11 +42,14 @@ public class DataPersistanceManager : MonoBehaviour
     public void NewGame()
     {
         Debug.Log("New Game");
-        gameData = new GameData();
-        gameData.currentSceneName = SceneManager.GetActiveScene().name;
+        gameData = new GameData
+        {
+            currentSceneName = "Chapter2"
+        };
     }   
     public void LoadGameData()
     {
+        Debug.Log("Load Game Data");    
         gameData = dataHandler.Load();
          if (gameData == null)
         {
@@ -57,6 +60,14 @@ public class DataPersistanceManager : MonoBehaviour
     public void InitGameData()
     {
         dataPersistanceObjects = FindAllDataPersistanceObjects();
+        if(gameData.isNewGame)
+        {
+            gameData.isNewGame = false;
+            return; // leave all objects at default data in scene for new game, only load saved data for existing game
+           
+        }
+        
+        
         Debug.Log("Init Game");
         int totalObjects = dataPersistanceObjects != null ? dataPersistanceObjects.Count : 0;
         if (totalObjects == 0)
@@ -69,6 +80,7 @@ public class DataPersistanceManager : MonoBehaviour
         foreach (IDataPersistance dataPersistanceObj in dataPersistanceObjects)
         {
             dataPersistanceObj.LoadData(gameData);
+            Debug.Log("Loaded data for: " + dataPersistanceObj.GetType().Name);
             loaded++;
             float localNorm = (float)loaded / totalObjects; // 0..1
             float mapped = Mathf.Lerp(0.8f, 1f, localNorm);
@@ -81,7 +93,9 @@ public class DataPersistanceManager : MonoBehaviour
         Debug.Log("Save Game");
         // capture current active scene name into save data
         if (gameData == null) gameData = new GameData();
+        Debug.Log("Data objects count: " + dataPersistanceObjects.Count);
         gameData.currentSceneName = SceneManager.GetActiveScene().name;
+        dataPersistanceObjects = FindAllDataPersistanceObjects();
         foreach (IDataPersistance dataPersistanceObj in dataPersistanceObjects)
         {
             dataPersistanceObj.SaveData(ref gameData);

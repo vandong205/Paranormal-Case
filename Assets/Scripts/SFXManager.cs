@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using System.Threading.Tasks;
 public class SFXManager : MonoBehaviour
 {
     public static SFXManager Instance;
@@ -12,6 +14,8 @@ public class SFXManager : MonoBehaviour
     [Header("Global Volume")]
     [Range(0f, 1f)] public float musicVolume = 1f;
     [Range(0f, 1f)] public float sfxVolume = 1f;
+    private Dictionary<Music, AudioClip> musicCache = new();
+    private Dictionary<Music, AsyncOperationHandle<AudioClip>> handleCache = new();
 
     private void Awake()
     {
@@ -24,11 +28,6 @@ public class SFXManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
-    // =========================
-    // MUSIC
-    // =========================
-
     public void PlayMusic(Music music, float overrideFadeDuration = -1f)
 {
     if (music == null || music.clip == null)
@@ -38,6 +37,21 @@ public class SFXManager : MonoBehaviour
     StartCoroutine(PlayMusicRoutine(music, overrideFadeDuration));
 }
 
+public async Task PreloadMusic(Music music)
+{
+    if (music == null || music.clip == null)
+        return;
+
+    if (musicCache.ContainsKey(music))
+        return;
+
+    var handle = music.clip.LoadAssetAsync<AudioClip>();
+    handleCache[music] = handle;
+
+    AudioClip clip = await handle.Task;
+
+    musicCache[music] = clip;
+}
 private IEnumerator PlayMusicRoutine(Music music, float overrideFadeDuration)
 {
     float fadeDuration = overrideFadeDuration >= 0f 
@@ -47,9 +61,14 @@ private IEnumerator PlayMusicRoutine(Music music, float overrideFadeDuration)
     if (fadeDuration > 0f)
         yield return StartCoroutine(FadeOut(musicSource, fadeDuration));
 
-    var handle = music.clip.LoadAssetAsync<AudioClip>();
-    yield return handle;
-    musicSource.clip = handle.Result;   
+    if (!musicCache.ContainsKey(music))
+    {
+        var preloadTask = PreloadMusic(music);
+        while (!preloadTask.IsCompleted)
+            yield return null;
+    }
+
+    musicSource.clip = musicCache[music];
     musicSource.loop = music.loop;
     musicSource.outputAudioMixerGroup = music.outputMixerGroup;
     musicSource.time = music.startTime;

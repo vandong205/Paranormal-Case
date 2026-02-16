@@ -17,7 +17,10 @@ public class MainMenuController : MonoBehaviour
         SetupButton(StartButton, OnStartButtonClicked);
         SetupButton(OptionsButton, OnOptionsButtonClicked);
         SetupButton(ExitButton, OnExitButtonClicked);
-
+        if(GameDatabase.Instance != null && GameDatabase.Instance.musicDB != null)
+        {
+            SFXManager.Instance.PlayMusic(GameDatabase.Instance.musicDB.startMenuMusic);
+        }
         PlayIntroAnimation();
     }
 
@@ -95,6 +98,7 @@ public class MainMenuController : MonoBehaviour
         {
             transitionLayerController.OpenCurtain(() =>
             {
+                SFXManager.Instance.StopMusic(1f);
                 SceneManager.LoadScene("LoadingScene");
             });
         }

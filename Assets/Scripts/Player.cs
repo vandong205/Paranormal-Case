@@ -34,6 +34,7 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
     public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value; } }
     private void Awake()
     {
+        Debug.Log("Player Awake on object: " + gameObject.name  );
         rb = GetComponent<Rigidbody>();
 
         if (animator == null)
@@ -140,6 +141,7 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
 
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        Debug.Log("Moving");
         moveInput = context.ReadValue<Vector2>();
     }
 
@@ -187,7 +189,6 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
     private void Move()
     {
         if (rb == null) return;
-
         // Build horizontal movement vector and normalize only the horizontal axes.
         Vector3 horizontal = new Vector3(moveInput.x, 0f, moveInput.y);
         if (horizontal.sqrMagnitude > 1f)

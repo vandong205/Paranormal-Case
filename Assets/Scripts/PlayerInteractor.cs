@@ -20,7 +20,8 @@ public class PlayerInteractor : MonoBehaviour, IInteractor
             interactAction.performed += OnInteractPerformed;
             if (!interactAction.enabled) interactAction.Enable();
             return;
-        }
+        }else
+        Debug.LogError("PlayerInteractor: No VDGlobal instance or InteractAction found, trying to find action map and action locally.");
 
         var inputActions = VDGlobal.Instance?.InputActions;
         if (inputActions == null)

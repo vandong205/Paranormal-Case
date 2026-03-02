@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TeleportGateManager : MonoBehaviour
+public class TeleportGateManager : MonoBehaviour, IDataPersistance
 {
     private GateController currentGate;
     public LightManager lightManager;
@@ -15,6 +15,36 @@ public class TeleportGateManager : MonoBehaviour
         {
             currentAreaRef = lightManager.defaultAreaID;
         }
+    }
+    
+    // IDataPersistance implementation
+    public void LoadData(GameData gameData)
+    {
+        if (gameData == null) return;
+
+        // if save contains a valid area, apply it
+        if (gameData.currentAreaRef >= 0)
+        {
+            int savedArea = gameData.currentAreaRef;
+            // disable previously assigned default area if different
+            if (currentAreaRef >= 0 && currentAreaRef != savedArea && lightManager != null)
+            {
+                lightManager.SetAreaLightsActive(currentAreaRef, false);
+            }
+
+            if (lightManager != null)
+            {
+                lightManager.SetAreaLightsActive(savedArea, true);
+            }
+
+            currentAreaRef = savedArea;
+        }
+    }
+
+    public void SaveData(ref GameData gameData)
+    {
+        if (gameData == null) return;
+        gameData.currentAreaRef = currentAreaRef;
     }
     public void SetCurrentGate(GateController gate)
     {

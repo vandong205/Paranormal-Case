@@ -6,6 +6,7 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
     [Header("Input")]
     [SerializeField] private string actionMapName = "Player";

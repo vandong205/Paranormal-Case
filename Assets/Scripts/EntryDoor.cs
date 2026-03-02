@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-
+using Unity.Cinemachine;    
 public class EntryDoor : MonoBehaviour, IInteracable
 {
     [Header("Interact")]
@@ -68,28 +68,35 @@ public class EntryDoor : MonoBehaviour, IInteracable
     }
 
     private void TeleportPlayer()
-    {
-        if (VDGlobal.Instance.PlayerTranform == null || targetPoint == null)
-        {
-            return;
-        }
+{
+    if (VDGlobal.Instance.PlayerTranform == null || targetPoint == null)
+        return;
 
-        Transform playerTransform = VDGlobal.Instance.PlayerTranform;
+    Transform playerTransform = VDGlobal.Instance.PlayerTranform;
 
-        CharacterController characterController =
-            playerTransform.GetComponent<CharacterController>();
+    Vector3 oldPosition = playerTransform.position;
 
-        if (characterController != null)
-            characterController.enabled = false;
+    CharacterController characterController =
+        playerTransform.GetComponent<CharacterController>();
 
-        Rigidbody rigidbody = playerTransform.GetComponent<Rigidbody>();
-        if (rigidbody != null)
-            rigidbody.linearVelocity = Vector3.zero;
+    if (characterController != null)
+        characterController.enabled = false;
 
-        playerTransform.position = targetPoint.position;
-        playerTransform.rotation = targetPoint.rotation;
+    Rigidbody rigidbody = playerTransform.GetComponent<Rigidbody>();
+    if (rigidbody != null)
+        rigidbody.linearVelocity = Vector3.zero;
 
-        if (characterController != null)
-            characterController.enabled = true;
-    }
+    // TELEPORT
+    playerTransform.position = targetPoint.position;
+
+    Vector3 delta = targetPoint.position - oldPosition;
+    CinemachineCamera vcam =
+        FindFirstObjectByType<CinemachineCamera>();
+
+    if (vcam != null)
+        vcam.OnTargetObjectWarped(playerTransform, delta);
+
+    if (characterController != null)
+        characterController.enabled = true;
+}
 }

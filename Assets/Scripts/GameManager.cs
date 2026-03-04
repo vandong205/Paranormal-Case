@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public static event Action<float> OnLoadingProgressChanged;
     private TransitionLayerController currentTransition;
-    [SerializeField] private string sceneName = "Chapter2";
-    private string targetSceneName;
+    [SerializeField] private string NewGameScene = "Chapter2";
+    private string GamePlayScene;
 
     private void Awake()
     {
@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        QualitySettings.vSyncCount = 1;   
+        Application.targetFrameRate = -1;
     }
 
     private void OnEnable()
@@ -44,37 +46,43 @@ public class GameManager : MonoBehaviour
     }
 
     private IEnumerator LoadRoutine()
+{
+    DataPersistanceManager.Instance.LoadGameData();
+
+    GamePlayScene =
+        !string.IsNullOrEmpty(DataPersistanceManager.Instance.gameData?.currentSceneName)
+        ? DataPersistanceManager.Instance.gameData.currentSceneName
+        : NewGameScene;
+
+    yield return StartCoroutine(SmoothProgress(0f, 0.1f, 0.25f));
+
+    // ===== Gameplay Scene =====
+    AsyncOperation gameplayLoad =
+        SceneManager.LoadSceneAsync(GamePlayScene, LoadSceneMode.Single);
+
+    gameplayLoad.allowSceneActivation = false;
+
+    while (gameplayLoad.progress < 0.9f)
     {
-        // Phase 1: File load (0% -> 10%)
-        DataPersistanceManager.Instance.LoadGameData();
-        // decide which scene to load: prefer saved scene name
-        targetSceneName = !string.IsNullOrEmpty(DataPersistanceManager.Instance.gameData?.currentSceneName)
-            ? DataPersistanceManager.Instance.gameData.currentSceneName
-            : sceneName;
-        yield return StartCoroutine(SmoothProgress(0f, 0.1f, 0.25f));
-
-        // Phase 2: Scene load (10% -> 80%)
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetSceneName);
-        asyncLoad.allowSceneActivation = false;
-
-        while (asyncLoad.progress < 0.9f)
-        {
-            float normalized = asyncLoad.progress / 0.9f; // 0..1
-            float mapped = Mathf.Lerp(0.1f, 0.8f, normalized);
-            OnLoadingProgressChanged?.Invoke(mapped);
-            yield return null;
-        }
-
-        // ensure UI reaches 80%
-        OnLoadingProgressChanged?.Invoke(0.8f);
-        asyncLoad.allowSceneActivation = true;
-
-        // wait until scene activated
-        while (!asyncLoad.isDone)
-            yield return null;
-
-        // Phase 3 (injection) will run in InitSceneRoutine and DataPersistanceManager will report 80->100%
+        float mapped = Mathf.Lerp(0.1f, 0.6f, gameplayLoad.progress / 0.9f);
+        OnLoadingProgressChanged?.Invoke(mapped);
+        yield return null;
     }
+
+    gameplayLoad.allowSceneActivation = true;
+
+    while (!gameplayLoad.isDone)
+        yield return null;
+
+    // ===== UI Scene =====
+    AsyncOperation uiLoad =
+        SceneManager.LoadSceneAsync("MainUI", LoadSceneMode.Additive);
+
+    while (!uiLoad.isDone)
+        yield return null;
+
+    OnLoadingProgressChanged?.Invoke(0.8f);
+}
 
     private IEnumerator SmoothProgress(float from, float to, float duration)
     {
@@ -94,7 +102,7 @@ public class GameManager : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name != targetSceneName) return;
+        if (scene.name != GamePlayScene) return;
 
         StartCoroutine(InitSceneRoutine());
     }
@@ -104,12 +112,15 @@ public class GameManager : MonoBehaviour
         yield return null; // đảm bảo Start() đã chạy
 
         DataPersistanceManager.Instance.InitGameData();
-
+        yield  return SceneInitializer.InitializeScene();
         Debug.Log("Scene Initialized Safely");
         if (currentTransition != null)
         {
+            Debug.Log("Closing transition layer");
             currentTransition.CloseCurtain();
-        }
+        }else{
+            Debug.LogWarning("No transition layer registered, skipping curtain close.");
+            }
     }
  public void RegisterTransition(TransitionLayerController controller)
 {

@@ -101,6 +101,12 @@ public class MainMenuController : MonoBehaviour
                 SceneManager.LoadScene("LoadingScene");
             });
         }
+        else
+        {
+            SFXManager.Instance.StopMusic(1f);
+            SceneManager.LoadScene("LoadingScene");
+        }
+        
     }
 
     private void OnOptionsButtonClicked()

@@ -1,7 +1,10 @@
+using System.Collections;
 using UnityEngine;
-
+using Unity.Cinemachine;
 public class GateController : MonoBehaviour
 {
+    [SerializeField] bool HasFadeTransition = false;
+    public float FadeDuration = 1f;   
     [Tooltip("(Deprecated) Single exit gate. Kept for compatibility.")]
     public Transform exitGate;
 
@@ -11,10 +14,21 @@ public class GateController : MonoBehaviour
     [Tooltip("Objects to enable when the player enters the gate trigger; they will be disabled on exit.")]
     public GameObject[] triggerObjects;
 
-    public TeleportGateManager Manager;
-    
+    private TeleportGateManager Manager;
+    private bool isProcessing = false;
+    private bool error = false;
+    void Awake()
+    {
+        Manager = FindFirstObjectByType<TeleportGateManager>();
+        if (Manager == null)
+        {
+            error = true;
+            Debug.LogError("GateController: No TeleportGateManager found in the scene.");
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
+        if (error) return;
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player đã vào vùng Teleport " + this.name);
@@ -34,6 +48,7 @@ public class GateController : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
+        if (error) return;
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player đã ra khỏi vùng Teleport" + this.name);
@@ -58,6 +73,62 @@ public class GateController : MonoBehaviour
             Debug.LogWarning($"[{name}] Teleport failed: object to teleport is null.");
             return;
         }
+        if (HasFadeTransition)
+        {
+            if (isProcessing)
+                return;
+
+            StartCoroutine(TeleportWithFadeSequence(obj, index));
+            return;
+        }
+
+        TeleportImmediate(obj, index);
+    }
+
+    private IEnumerator TeleportWithFadeSequence(Transform obj, int index)
+{
+    isProcessing = true;
+
+    if (VDGlobal.Instance == null || FadeScreen.Instance == null)
+    {
+        TeleportImmediate(obj, index);
+        isProcessing = false;
+        yield break;
+    }
+    FadeScreen.Instance.SetFadeDuration(FadeDuration);
+    // ===== LOCK INPUT =====
+    VDGlobal.Instance.DisableMoveAction();
+    VDGlobal.Instance.DisableInteractAction();
+
+    if (VDGlobal.Instance.PlayerInteractor != null)
+        VDGlobal.Instance.PlayerInteractor.ForceClearInteractable();
+
+    yield return FadeScreen.Instance.FadeOut();
+
+    Vector3 oldPosition = obj.position;
+
+    TeleportImmediate(obj, index);
+
+    Vector3 delta = obj.position - oldPosition;
+    CinemachineCamera vcam = FindFirstObjectByType<CinemachineCamera>();    
+    if (vcam != null)
+    {
+        vcam.OnTargetObjectWarped(obj, delta);
+        vcam.PreviousStateIsValid = false;
+    }
+    yield return null;
+
+
+    yield return FadeScreen.Instance.FadeIn();
+
+    VDGlobal.Instance.EnableMoveAction();
+    VDGlobal.Instance.EnableInteractAction();
+
+    isProcessing = false;
+}
+
+    private void TeleportImmediate(Transform obj, int index)
+    {
         // Prefer configured exitGates array when present
         if (exitGates != null && exitGates.Length > 0)
         {
@@ -75,6 +146,10 @@ public class GateController : MonoBehaviour
                 return;
             }
 
+            if (obj.TryGetComponent<Rigidbody>(out var rgb))
+            {
+                rgb.MovePosition(target.position);
+            }else
             obj.position = target.position;
             return;
         }

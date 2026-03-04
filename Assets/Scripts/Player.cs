@@ -1,8 +1,9 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
+using System.Collections.Generic;
+public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneReady
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -63,35 +64,50 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
     }
 
     public void LoadData(GameData gameData)
+{
+    if (gameData == null) return;
+
+    Vector3 oldPos = transform.position;
+    Vector3 savedPos = gameData.playerPosition.ToVector3();
+    Vector3 finalPosition = savedPos;
+
+
+    int groundLayerMask = LayerMask.GetMask("Ground"); 
+    if (Physics.Raycast(savedPos + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 5f, groundLayerMask))
     {
-        if (gameData == null) return;
-        Vector3 oldPos = transform.position;
-        Vector3 targetPosition = gameData.playerPosition.ToVector3();
-        transform.position = targetPosition; // set initial position before raycast to ensure correct raycast origin
-        if (Physics.Raycast(targetPosition + Vector3.up, Vector3.down, out RaycastHit hit, 10f))
-        {
-            targetPosition = hit.point;
-        }
+        finalPosition = hit.point;
+    }
 
-        if (rb != null)
-        {
-            rb.isKinematic = true; // Tạm ngắt physics
+    // 2. Dịch chuyển Player
+    if (rb != null)
+    {
+        rb.isKinematic = true; // Tạm dừng vật lý
+        
+        // Gán vị trí cho cả 2 để đồng bộ ngay lập tức
+        transform.position = finalPosition;
+        rb.position = finalPosition;
+        
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
 
-            rb.position = targetPosition;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+        // Đảm bảo Unity cập nhật vị trí vật lý ngay lập tức trước khi bật lại Kinematic
+        Physics.SyncTransforms(); 
+        rb.isKinematic = false;
+    }
+    else
+    {
+        transform.position = finalPosition;
+    }
 
-            rb.isKinematic = false;
-        }
-        else
-        {
-            transform.position = targetPosition;
-        }
-        CinemachineCamera cam = FindFirstObjectByType<CinemachineCamera>();
-        if (cam != null)
-        {
-            cam.OnTargetObjectWarped(transform, targetPosition - oldPos);
-        } 
+    // 3. Xử lý Camera (Warp)
+    // Tìm camera đang Follow/LookAt player này
+    CinemachineCamera cam = FindFirstObjectByType<CinemachineCamera>();
+    if (cam != null)
+    {
+        // Delta là khoảng cách từ vị trí cũ tới vị trí mới
+        Vector3 delta = finalPosition - oldPos;
+        cam.OnTargetObjectWarped(transform, delta);
+    }
     }
 
 
@@ -233,5 +249,10 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance
         // Gửi vector đã chuẩn hóa (1,0), (-1,0), (0,1), hoặc (0,-1) vào Animator
         animator.SetFloat(ANIM_PARAM_MOVE_X, lastAnimDirection.x);
         animator.SetFloat(ANIM_PARAM_MOVE_Y, lastAnimDirection.y);
+    }
+
+    public IEnumerator OnSceneReady()
+    {
+        yield return new WaitForFixedUpdate(); 
     }
 }

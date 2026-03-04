@@ -16,7 +16,10 @@ public class FadeScreen : MonoBehaviour
         else
             Destroy(gameObject);
     }
-
+    public void SetFadeDuration(float duration)
+    {
+        fadeDuration = duration;
+    }   
     public IEnumerator FadeOut()
     {
         float time = 0f;

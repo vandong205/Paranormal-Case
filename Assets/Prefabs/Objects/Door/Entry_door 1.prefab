@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 7472622142859425726}
   - component: {fileID: 8921129783996772168}
   - component: {fileID: 9010035790292790408}
+  - component: {fileID: 1178293161805037236}
   m_Layer: 0
   m_Name: Entry_door 1
   m_TagString: Untagged
@@ -235,8 +236,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.86458015, y: 1.9467787, z: 0.29645032}
-  m_Center: {x: 0.4336354, y: 1.0056541, z: -0.02323023}
+  m_Size: {x: 0.8645801, y: 1.9467787, z: 1.364108}
+  m_Center: {x: 0.4336354, y: 1.0056541, z: 0.51059866}
 --- !u!114 &9010035790292790408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,9 +250,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c418e63d7e2d0a546a37fef3c671dd51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  outliner: {fileID: 2539529132027124664}
-  targetPoint: {fileID: 3882968328099238092}
-  teleportDelay: 0.05
+--- !u!114 &1178293161805037236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4503885932700424059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff37f9b87e4e8b41afceec1c5ff3169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GateController
+  HasFadeTransition: 1
+  FadeDuration: 1
+  exitGate: {fileID: 3882968328099238092}
+  exitGates: []
+  triggerObjects: []
 --- !u!1 &5862303659140399320
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +402,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3882968328099238092}
+  - component: {fileID: 5053359263633182855}
   m_Layer: 0
   m_Name: TargetPoint
   m_TagString: Untagged
@@ -409,6 +425,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7472622142859425726}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5053359263633182855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7884075762562248581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf07a3c0f2a14c47b5af145ade7fa5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExitGateData
+  areaRefNumber: 1
 --- !u!1 &8030828956745514090
 GameObject:
   m_ObjectHideFlags: 0

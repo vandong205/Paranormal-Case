@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LightManager : MonoBehaviour
@@ -34,5 +35,10 @@ public class LightManager : MonoBehaviour
         {
             Debug.LogWarning($"No LightController found for area {areaID}.");
         }
+    }
+    public IEnumerator SetAreaLightWithDelay(int areaID, bool enabled, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SetAreaLightsActive(areaID, enabled);
     }
 }

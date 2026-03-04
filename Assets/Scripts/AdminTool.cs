@@ -3,15 +3,39 @@ using TMPro;
 using UnityEngine;
 using System;
 using System.IO;
+using UnityEngine.Profiling;
 
 public class AdminTool : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField] private TextMeshProUGUI notificationText;
     [SerializeField] private TextMeshProUGUI speedText;
+    [SerializeField] private TextMeshProUGUI FPS;
+    [SerializeField] private TextMeshProUGUI MemoryUsage;
     [SerializeField] private float notificationFadeDuration = 2f;
     private Coroutine notificationCoroutine;
     private SerializableVector3 lastPlayerPosition;
+    private int frameCount = 0;
+    private float elapsedTime = 0f;
+    void Update()
+    {
+        frameCount++;
+        elapsedTime += Time.unscaledDeltaTime;
+        if (elapsedTime >= 1f)
+        {
+            float fps = frameCount / elapsedTime;
+            if (FPS != null)
+                FPS.text = $"FPS: {fps:F1}";
+            if (MemoryUsage != null)
+            {
+                long memory = Profiler.GetTotalAllocatedMemoryLong();
+                MemoryUsage.text = $"Memory: {memory / (1024f * 1024f):F1} MB";
+            }
+            frameCount = 0;
+            elapsedTime = 0f;
+        }
+
+    }
     void Awake()
     {
         if (player == null)
@@ -155,7 +179,6 @@ public class AdminTool : MonoBehaviour
             var data = JsonUtility.FromJson<AdminToolData>(json);
             if (data == null) return;
 
-            this.lastPlayerPosition = data.lastPlayerPosition;
             if (player != null)
             {
                 player.MoveSpeed = data.playerMoveSpeed;

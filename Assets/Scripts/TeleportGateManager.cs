@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,12 +33,7 @@ public class TeleportGateManager : MonoBehaviour, IDataPersistance
             {
                 lightManager.SetAreaLightsActive(currentAreaRef, false);
             }
-
-            if (lightManager != null)
-            {
-                lightManager.SetAreaLightsActive(savedArea, true);
-            }
-
+            lightManager.SetAreaLightsActive(savedArea, true);
             currentAreaRef = savedArea;
         }
     }
@@ -99,7 +96,7 @@ public class TeleportGateManager : MonoBehaviour, IDataPersistance
         }
     }
 
-    private void TryTeleport(int index)
+    public void TryTeleport(int index)
     {
         if (currentGate == null)
         {
@@ -111,13 +108,15 @@ public class TeleportGateManager : MonoBehaviour, IDataPersistance
         }
         if (lightManager == null)
         {
-            Debug.LogWarning("TeleportGateManager: LightManager is not assigned.");
-            return;
+            lightManager = FindFirstObjectByType<LightManager>();
+            if (lightManager == null)
+            Debug.LogWarning("TeleportGateManager: No LightManager found in the scene. Area lighting will not be updated on teleport.");
         }
 
         // Pre-validate gateindex to provide clearer warnings
         if (!HasExitGateIndex(index))
         {
+            Debug.LogWarning($"[{currentGate.name}] No exit gate assigned at index {index}. Teleportation aborted.");
             return;
         }
 
@@ -127,18 +126,14 @@ public class TeleportGateManager : MonoBehaviour, IDataPersistance
             Debug.LogWarning($"[{currentGate.name}] Teleport failed: destination area is invalid at exit index {index}.");
             return;
         }
-
+        lightManager.SetAreaLightsActive(destinationAreaRef, true);
         currentGate.Teleport(Player.transform, index);
-
         if (currentAreaRef >= 0 && currentAreaRef != destinationAreaRef)
         {
-            lightManager.SetAreaLightsActive(currentAreaRef, false);
+            StartCoroutine(lightManager.SetAreaLightWithDelay(currentAreaRef, false,currentGate.FadeDuration+0.5f));
         }
-
-        lightManager.SetAreaLightsActive(destinationAreaRef, true);
         currentAreaRef = destinationAreaRef;
     }
-
     private bool HasExitGateIndex(int index)
     {
         if (currentGate == null)

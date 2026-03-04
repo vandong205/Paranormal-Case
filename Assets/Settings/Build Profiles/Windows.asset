@@ -27,6 +27,8 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/LoadingScene.unity
   - m_enabled: 1
+    m_path: Assets/Scenes/MainUI.unity
+  - m_enabled: 1
     m_path: Assets/Scenes/Chapter2.unity
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4074583940281082461}
+  - component: {fileID: 384730954949916353}
   m_Layer: 0
   m_Name: TargetPoint
   m_TagString: Untagged
@@ -25,12 +26,25 @@ Transform:
   m_GameObject: {fileID: 2318970872820380573}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.926, y: 5.428, z: -63.1}
+  m_LocalPosition: {x: 44.08, y: 0.68, z: -21.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8018325806862128314}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &384730954949916353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2318970872820380573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf07a3c0f2a14c47b5af145ade7fa5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExitGateData
+  areaRefNumber: 5
 --- !u!1 &3042973081216146977
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +342,8 @@ GameObject:
   - component: {fileID: 3147461798339247775}
   - component: {fileID: 6748752629375468901}
   - component: {fileID: 5371186748016789465}
+  - component: {fileID: 420655310961091700}
+  - component: {fileID: 1911728831256653786}
   m_Layer: 0
   m_Name: PadlockDoor
   m_TagString: Untagged
@@ -371,8 +387,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.86458015, y: 1.9467787, z: 0.29645032}
-  m_Center: {x: 0.4336354, y: 1.0056541, z: -0.02323023}
+  m_Size: {x: 0.86458015, y: 1.9467787, z: 1.2039368}
+  m_Center: {x: 0.4336354, y: 1.0056541, z: -0.4769733}
 --- !u!114 &6748752629375468901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,9 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c418e63d7e2d0a546a37fef3c671dd51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  outliner: {fileID: 2442632814557356148}
-  targetPoint: {fileID: 4074583940281082461}
-  teleportDelay: 0.05
 --- !u!114 &5371186748016789465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,6 +418,37 @@ MonoBehaviour:
   canEditSign: 1
   correctSignNumber: 42
   labelNumber: {fileID: 152232634224242129}
+--- !u!114 &420655310961091700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5712250065518120934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929432e7b6ad3824da9295599b854547, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntryImmobleDoorCompose
+  immobileDoor: {fileID: 5371186748016789465}
+  entryDoor: {fileID: 6748752629375468901}
+  triggerCollider: {fileID: 3147461798339247775}
+--- !u!114 &1911728831256653786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5712250065518120934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff37f9b87e4e8b41afceec1c5ff3169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GateController
+  HasFadeTransition: 1
+  exitGate: {fileID: 4074583940281082461}
+  exitGates: []
+  triggerObjects: []
 --- !u!1 &6927354750473601550
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +460,6 @@ GameObject:
   - component: {fileID: 4143969720649223760}
   - component: {fileID: 2329352396394003423}
   - component: {fileID: 1466349356236259117}
-  - component: {fileID: 6041299260355707405}
   - component: {fileID: 8117202321535685963}
   m_Layer: 0
   m_Name: Sign
@@ -498,27 +541,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6041299260355707405
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6927354750473601550}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8117202321535685963
 MonoBehaviour:
   m_ObjectHideFlags: 0

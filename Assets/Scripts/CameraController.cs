@@ -1,17 +1,22 @@
 using UnityEngine;
 using Unity.Cinemachine;
-public class CameraController : MonoBehaviour
+using System.Collections.Generic;
+using System;
+using System.Collections;
+[RequireComponent(typeof(CinemachineConfiner3D))]
+[Serializable]
+public class CameraConfinerData
 {
-    [SerializeField] CinemachineConfiner3D cinemachineConfiner;
-    void Awake()
+    public int areaID;
+    public BoxCollider confinerCollider;
+}
+
+[RequireComponent(typeof(CinemachineConfiner3D))]
+[RequireComponent(typeof(CinemachineCamera))]
+public class CameraController : MonoBehaviour, IOnSceneReady
+{
+    public IEnumerator OnSceneReady()
     {
-        if (cinemachineConfiner == null)
-        {
-            cinemachineConfiner = GetComponent<CinemachineConfiner3D>();
-        }
+        yield return new WaitForEndOfFrame(); 
     }
-    public void SetConfiner(Collider confiner)
-    {
-        cinemachineConfiner.BoundingVolume = confiner;
-    }   
 }

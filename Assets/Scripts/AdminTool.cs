@@ -140,7 +140,14 @@ public class AdminTool : MonoBehaviour
     {
         SaveAdminToolData();
     }
-
+    public void KillPlayer()
+    {
+        if (player != null)
+        {
+            player.Die();
+            SetNotification("Player killed.");
+        }
+    }
     [Serializable]
     private class AdminToolData
     {
@@ -168,7 +175,13 @@ public class AdminTool : MonoBehaviour
             Debug.LogError("AdminTool: Failed to save data - " + ex.Message);
         }
     }
-
+    public void SaveGame()
+    {
+        if (DataPersistanceManager.Instance != null)
+        {
+            DataPersistanceManager.Instance.RuntimeSaveGame();
+        }
+    }
     private void LoadAdminToolData()
     {
         try

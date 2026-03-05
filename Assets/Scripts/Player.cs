@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System;
 public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneReady
 {
     [Header("Movement Settings")]
@@ -15,8 +16,8 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
     [SerializeField] private string skipActionName = "SkipText";
 
     [Header("Animation")]
-    [SerializeField] private Animator animator;
-
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private PlayerAnimator playerAnimatorComponent;
     private static readonly string ANIM_PARAM_IS_MOVING = "IsMoving";
     private static readonly string ANIM_PARAM_MOVE_X = "MoveX";
     private static readonly string ANIM_PARAM_MOVE_Y = "MoveY";
@@ -37,12 +38,10 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
     private void Awake()
     {
         Debug.Log("Player Awake on object: " + gameObject.name  );
-        rb = GetComponent<Rigidbody>();
-
-        if (animator == null)
-            animator = GetComponent<Animator>();
-
-        // Prefer retrieving configured actions from VDGlobal if available
+        rb = GetComponent<Rigidbody>();        
+    }
+    void Start()
+    {
         if (VDGlobal.Instance != null)
         {
             moveAction = VDGlobal.Instance.MoveAction ?? VDGlobal.Instance.InputActions?.FindActionMap(actionMapName)?.FindAction(moveActionName);
@@ -61,8 +60,14 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
                 skipAction = inputActions.FindActionMap(actionMapName)?.FindAction(skipActionName);
             }
         }
-    }
+        if (playerAnimatorComponent == null)
+            playerAnimatorComponent = GetComponentInChildren<PlayerAnimator>();
+            if (playerAnimatorComponent != null)
+            {
+               playerAnimatorComponent.OnDeathAnimationComplete +=Revive;
+            }
 
+    }
     public void LoadData(GameData gameData)
 {
     if (gameData == null) return;
@@ -207,12 +212,12 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
     {
         if (rb == null) return;
         // Build horizontal movement vector and normalize only the horizontal axes.
-        Vector3 horizontal = new Vector3(moveInput.x, 0f, moveInput.y);
+        Vector3 horizontal = new(moveInput.x, 0f, moveInput.y);
         if (horizontal.sqrMagnitude > 1f)
             horizontal.Normalize();
 
         // Apply horizontal speed but preserve current vertical velocity (gravity/jumps).
-        Vector3 velocity = new Vector3(
+        Vector3 velocity = new(
             horizontal.x * moveSpeed,
             rb.linearVelocity.y,
             horizontal.z * moveSpeed
@@ -224,12 +229,25 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
     {
         m_isAlive = false;
         SetMoveable(false);
+        if (playerAnimatorComponent != null)
+        {
+            playerAnimatorComponent.DoDie();
+        }
+     }
+    public void Revive()
+    {
+        m_isAlive = true;
+        SetMoveable(true);
+        if (playerAnimatorComponent != null)
+        {
+            // Optionally trigger a revive animation or reset animator state here
+        }
     }
     private void UpdateAnimation()
     {
-        if (animator == null) return;
+        if (playerAnimator == null) return;
 
-        animator.SetBool(ANIM_PARAM_IS_MOVING, isMoving);
+        playerAnimator.SetBool(ANIM_PARAM_IS_MOVING, isMoving);
 
         if (isMoving)
         {
@@ -247,8 +265,8 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
         }
 
         // Gửi vector đã chuẩn hóa (1,0), (-1,0), (0,1), hoặc (0,-1) vào Animator
-        animator.SetFloat(ANIM_PARAM_MOVE_X, lastAnimDirection.x);
-        animator.SetFloat(ANIM_PARAM_MOVE_Y, lastAnimDirection.y);
+        playerAnimator.SetFloat(ANIM_PARAM_MOVE_X, lastAnimDirection.x);
+        playerAnimator.SetFloat(ANIM_PARAM_MOVE_Y, lastAnimDirection.y);
     }
 
     public IEnumerator OnSceneReady()

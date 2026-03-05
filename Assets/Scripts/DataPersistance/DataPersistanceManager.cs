@@ -3,10 +3,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting;
 
 public class DataPersistanceManager : MonoBehaviour
 {
     [SerializeField] private string fileName = "gameData.json"; 
+    [SerializeField] private float autoSaveInterval = 600f;
     private DataPersistanceManager() { }
     public GameData gameData;
     private FileDataHandler dataHandler;
@@ -38,6 +40,18 @@ public class DataPersistanceManager : MonoBehaviour
         }
         dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
 
+    }
+    void Start()
+    {
+        StartCoroutine(AutoSaveLoop()); 
+    }
+    private System.Collections.IEnumerator AutoSaveLoop()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(autoSaveInterval);
+            RuntimeSaveGame();
+        }
     }
     public void NewGame()
     {
@@ -87,24 +101,48 @@ public class DataPersistanceManager : MonoBehaviour
             GameManager.Instance.ReportProgress(mapped);
         }
     }
-    
-    public void SaveGame()
+    public void RuntimeSaveGame()
     {
-        Debug.Log("Save Game");
-        // capture current active scene name into save data
-        if (gameData == null) gameData = new GameData();
-        Debug.Log("Data objects count: " + dataPersistanceObjects.Count);
-        gameData.currentSceneName = SceneManager.GetActiveScene().name;
-        dataPersistanceObjects = FindAllDataPersistanceObjects();
-        foreach (IDataPersistance dataPersistanceObj in dataPersistanceObjects)
-        {
-            dataPersistanceObj.SaveData(ref gameData);
-        }
-        dataHandler.Save(gameData);
+        StartCoroutine(RuntimeSaveRoutine());
     }
+
+    private System.Collections.IEnumerator RuntimeSaveRoutine()
+{
+    float minDisplayTime = 1.5f;
+    float startTime = Time.time;
+
+    MainCanvas.Instance.StaticUIController.AutoSavingIcon.Appear();
+
+    yield return StartCoroutine(SaveGameAsync());
+
+    float elapsed = Time.time - startTime;
+
+    if (elapsed < minDisplayTime)
+        yield return new WaitForSeconds(minDisplayTime - elapsed);
+
+    MainCanvas.Instance.StaticUIController.AutoSavingIcon.Disappear();
+}
+    private System.Collections.IEnumerator SaveGameAsync()
+{
+    gameData ??= new GameData();
+
+    gameData.currentSceneName = SceneManager.GetActiveScene().name;
+
+    dataPersistanceObjects = FindAllDataPersistanceObjects();
+
+    foreach (IDataPersistance dataPersistanceObj in dataPersistanceObjects)
+    {
+        dataPersistanceObj.SaveData(ref gameData);
+    }
+
+    // cho Unity 1 frame để không block
+    yield return null;
+
+    dataHandler.Save(gameData);
+}
     private void OnApplicationQuit()
     {
-        SaveGame();
+        StartCoroutine(SaveGameAsync());
     }
     private List<IDataPersistance> FindAllDataPersistanceObjects()
     {

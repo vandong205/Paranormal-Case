@@ -13,10 +13,6 @@ public class VDGlobal : MonoBehaviour
     [SerializeField] private string skipActionName = "SkipText";
     [SerializeField] private Transform playerTranform;
     [SerializeField] private PlayerInteractor playerInteractor;
-    [SerializeField] private CameraController playerCamera;
-
-
-    public CameraController PlayerCamera => playerCamera;
     public InputActionAsset InputActions=> inputActions;
     public InputAction MoveAction => moveAction;
     public InputAction InteractAction => interactAction;

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class GameManager : MonoBehaviour
     public static event Action<float> OnLoadingProgressChanged;
     private TransitionLayerController currentTransition;
     [SerializeField] private string NewGameScene = "Chapter2";
+    [SerializeField] private CameraController playerCamera;
+
+
+    public CameraController PlayerCamera => playerCamera;
     private string GamePlayScene;
 
     private void Awake()
@@ -24,7 +29,6 @@ public class GameManager : MonoBehaviour
         QualitySettings.vSyncCount = 1;   
         Application.targetFrameRate = -1;
     }
-
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -39,7 +43,10 @@ public class GameManager : MonoBehaviour
     {
         LoadGameData();
     }
-
+    public void RegisterPlayerCamera(CameraController cam)
+    {
+        playerCamera = cam;
+    }   
     public void LoadGameData()
     {
         StartCoroutine(LoadRoutine());

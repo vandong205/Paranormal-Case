@@ -222,7 +222,6 @@ GameObject:
   - component: {fileID: 16496073}
   - component: {fileID: 16496075}
   - component: {fileID: 16496076}
-  - component: {fileID: 16496077}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -343,21 +342,6 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 504.22116, y: -761.75903, z: 726.1891}
---- !u!114 &16496077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16496070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6699e5bcc33fc940ba60988b1f63e91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  zoomInSize: 4
-  zoomDuration: 0.5
-  zoomEase: 6
 --- !u!1 &18130345
 GameObject:
   m_ObjectHideFlags: 0
@@ -4185,6 +4169,7 @@ MonoBehaviour:
   skipActionName: SkipText
   playerTranform: {fileID: 7267590001830153546}
   playerInteractor: {fileID: 4005331018199766008}
+  playerCamera: {fileID: 0}
 --- !u!4 &803250497
 Transform:
   m_ObjectHideFlags: 0
@@ -4693,6 +4678,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8e029a5777befab4e9f2d6b2d28f788f, type: 3}
   m_PrefabInstance: {fileID: 229616255}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &832575517
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 832575519}
+  - component: {fileID: 832575518}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &832575518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832575517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 10fc4df2da32a41aaa32d77bc913491c, type: 2}
+--- !u!4 &832575519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832575517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &848113965
 GameObject:
   m_ObjectHideFlags: 0
@@ -16556,7 +16590,7 @@ Transform:
   m_Children:
   - {fileID: 6036571783389084570}
   m_Father: {fileID: 7511358434315900156}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 168.938}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 164.342}
 --- !u!114 &784695184081224932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16886,8 +16920,7 @@ MonoBehaviour:
   actionMapName: Player
   moveActionName: Move
   skipActionName: SkipText
-  playerAnimator: {fileID: 9040804008361122814}
-  playerAnimatorComponent: {fileID: 9040804008361122815}
+  animator: {fileID: 9040804008361122814}
 --- !u!4 &2180226697541213512
 Transform:
   m_ObjectHideFlags: 0
@@ -16903,7 +16936,7 @@ Transform:
   m_Children:
   - {fileID: 5889154646453401802}
   m_Father: {fileID: 7511358434315900156}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -209.629}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -182.336}
 --- !u!114 &2271679651255483992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17533,7 +17566,7 @@ Transform:
   - {fileID: 1237854522751141830}
   - {fileID: 7270494096238152326}
   m_Father: {fileID: 817937290003824918}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 87.241}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &5279310590055124476
 Transform:
   m_ObjectHideFlags: 0
@@ -17820,7 +17853,7 @@ Transform:
   m_Children:
   - {fileID: 4674899341915674297}
   m_Father: {fileID: 771546511573362337}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.767}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6114005860828406779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18414,7 +18447,6 @@ GameObject:
   m_Component:
   - component: {fileID: 817937290003824918}
   - component: {fileID: 9040804008361122814}
-  - component: {fileID: 9040804008361122815}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -18444,19 +18476,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &9040804008361122815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9040804008361122813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ab6f959d16d028459c4f3a47d3f0874, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  animator: {fileID: 9040804008361122814}
 --- !u!1001 &9216596806652922126
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18522,6 +18541,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 330585546}
+  - {fileID: 832575519}
   - {fileID: 16496074}
   - {fileID: 1153940647}
   - {fileID: 1575356309}

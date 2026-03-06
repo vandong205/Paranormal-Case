@@ -17,4 +17,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator.SetTrigger("Die");
     }
+    public void DoRevive()
+    {
+        animator.SetTrigger("Revive");
+    }
 }

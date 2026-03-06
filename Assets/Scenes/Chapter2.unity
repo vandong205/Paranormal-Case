@@ -357,7 +357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   zoomInSize: 4
   zoomDuration: 0.5
-  zoomEase: 6
+  zoomEase: 1
 --- !u!1 &18130345
 GameObject:
   m_ObjectHideFlags: 0

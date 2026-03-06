@@ -38,35 +38,24 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
     private void Awake()
     {
         Debug.Log("Player Awake on object: " + gameObject.name  );
-        rb = GetComponent<Rigidbody>();        
-    }
-    void Start()
-    {
-        if (VDGlobal.Instance != null)
+        rb = GetComponent<Rigidbody>();     
+         if (VDGlobal.Instance != null)
         {
             moveAction = VDGlobal.Instance.MoveAction ?? VDGlobal.Instance.InputActions?.FindActionMap(actionMapName)?.FindAction(moveActionName);
             skipAction = VDGlobal.Instance.SkipAction ?? VDGlobal.Instance.InputActions?.FindActionMap(actionMapName)?.FindAction(skipActionName);
         }
         else
         {
-            var inputActions = VDGlobal.Instance?.InputActions;
-            if (inputActions == null)
-            {
-                Debug.LogWarning("Player: InputActionAsset not available from VDGlobal.");
-            }
-            else
-            {
-                moveAction = inputActions.FindActionMap(actionMapName)?.FindAction(moveActionName);
-                skipAction = inputActions.FindActionMap(actionMapName)?.FindAction(skipActionName);
-            }
+           Debug.LogError("VDGlobal instance not found. Ensure VDGlobal is initialized before Player.");
         }
         if (playerAnimatorComponent == null)
             playerAnimatorComponent = GetComponentInChildren<PlayerAnimator>();
             if (playerAnimatorComponent != null)
             {
+                Debug.Log("Dang ky su kien hoi sinh");
                playerAnimatorComponent.OnDeathAnimationComplete +=Revive;
             }
-
+   
     }
     public void LoadData(GameData gameData)
 {
@@ -75,37 +64,7 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
     Vector3 oldPos = transform.position;
     Vector3 savedPos = gameData.playerPosition.ToVector3();
     Vector3 finalPosition = savedPos;
-
-
-    int groundLayerMask = LayerMask.GetMask("Ground"); 
-    if (Physics.Raycast(savedPos + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 5f, groundLayerMask))
-    {
-        finalPosition = hit.point;
-    }
-
-    // 2. Dịch chuyển Player
-    if (rb != null)
-    {
-        rb.isKinematic = true; // Tạm dừng vật lý
-        
-        // Gán vị trí cho cả 2 để đồng bộ ngay lập tức
-        transform.position = finalPosition;
-        rb.position = finalPosition;
-        
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        // Đảm bảo Unity cập nhật vị trí vật lý ngay lập tức trước khi bật lại Kinematic
-        Physics.SyncTransforms(); 
-        rb.isKinematic = false;
-    }
-    else
-    {
-        transform.position = finalPosition;
-    }
-
-    // 3. Xử lý Camera (Warp)
-    // Tìm camera đang Follow/LookAt player này
+    SetPosition(finalPosition);
     CinemachineCamera cam = FindFirstObjectByType<CinemachineCamera>();
     if (cam != null)
     {
@@ -236,11 +195,54 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
      }
     public void Revive()
     {
+        Debug.Log("Hoi sinh nhan vat");
         m_isAlive = true;
         SetMoveable(true);
         if (playerAnimatorComponent != null)
         {
-            // Optionally trigger a revive animation or reset animator state here
+           playerAnimatorComponent.DoRevive();
+        }
+        // SetPosition(DataPersistanceManager.Instance.gameData.playerPosition.ToVector3());
+        MainCanvas.Instance.SetGlobalSaturation(0);
+        MainCanvas.Instance.ScreenTransitionController.PlayTransition(TransitionType.VerticalShutter, TransitionDirection.Out, () =>
+        {
+            GameManager.Instance.PlayerCamera.ZoomOut();
+        }
+         );
+       
+    }
+    public void SetPosition(Vector3 targetPos)
+    {
+        int groundLayerMask = LayerMask.GetMask("Ground"); 
+    if (Physics.Raycast(targetPos + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 5f, groundLayerMask))
+    {
+        targetPos = hit.point;
+    }
+
+    // 2. Dịch chuyển Player
+    if (rb != null)
+    {
+        
+        // Gán vị trí cho cả 2 để đồng bộ ngay lập tức
+        transform.position = targetPos;
+        rb.position = targetPos;
+        
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        // Đảm bảo Unity cập nhật vị trí vật lý ngay lập tức trước khi bật lại Kinematic
+        Physics.SyncTransforms(); 
+    }
+    else
+    {
+        transform.position = targetPos;
+    }
+    }
+     private void OnDestroy()
+    {
+        if (playerAnimatorComponent != null)
+        {
+            playerAnimatorComponent.OnDeathAnimationComplete -= Revive;
         }
     }
     private void UpdateAnimation()

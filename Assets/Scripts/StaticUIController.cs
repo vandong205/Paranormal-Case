@@ -7,6 +7,6 @@ public class StaticUIController : MonoBehaviour
     void Start()
     {
         if (autoSavingIcon == null)
-            autoSavingIcon = FindFirstObjectByType<AutoSavingIcon>();
+            autoSavingIcon = GetComponentInChildren<AutoSavingIcon>();
     }
 }

@@ -46,7 +46,7 @@ public class Player : MonoBehaviour, ILivingEntity, IDataPersistance, IOnSceneRe
         }
         else
         {
-           Debug.LogError("VDGlobal instance not found. Ensure VDGlobal is initialized before Player.");
+           MessageBox.Show("VDGlobal chua duoc khoi tao truoc khi Player bat dau.");
         }
         if (playerAnimatorComponent == null)
             playerAnimatorComponent = GetComponentInChildren<PlayerAnimator>();

@@ -14,7 +14,7 @@ public class TransitionLayerController : MonoBehaviour
     {
         if (maskRectTransform == null)
         {
-            Debug.LogError("Mask RectTransform is not assigned.");
+            MessageBox.Show("Mask RectTransform chua duoc gan.");
             enabled = false;
             return;
         }
@@ -51,7 +51,17 @@ public class TransitionLayerController : MonoBehaviour
             .DOScaleX(0f, duration)
             .SetEase(ease);
     }
+    public void CloseCurtain(System.Action onComplete)
+    {
+        KillCurrentTween();
 
+        maskRectTransform.localScale = new Vector3(1f, 1f, 1f);
+
+        currentTween = maskRectTransform
+            .DOScaleX(0f, duration)
+            .SetEase(ease)
+            .OnComplete(()=> onComplete?.Invoke());
+    }
     /// <summary>
     /// Mở màn chập với callback khi hoàn tất
     /// </summary>

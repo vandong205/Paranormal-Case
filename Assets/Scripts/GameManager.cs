@@ -2,8 +2,6 @@ using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using Unity.VisualScripting;
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -124,7 +122,7 @@ public class GameManager : MonoBehaviour
         if (currentTransition != null)
         {
             Debug.Log("Closing transition layer");
-            currentTransition.CloseCurtain();
+            currentTransition.CloseCurtain(() => MainCanvas.Instance.Notification.Show("Khách sạn"));
         }else{
             Debug.LogWarning("No transition layer registered, skipping curtain close.");
             }

@@ -11,7 +11,7 @@ public partial class CheckTargetDeathCondition : Condition
     {
         if (!Target.Value.TryGetComponent<ILivingEntity>(out var LivingEntityTarget))
         {
-            Debug.LogError("LivingEntity Target is null in CheckTargetDeathCondition");
+            MessageBox.Show("Target khong hop le de kiem tra trang thai song.");
             return false;
         }
         return LivingEntityTarget.IsAlive;

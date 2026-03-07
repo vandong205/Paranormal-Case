@@ -21,7 +21,7 @@ public class PlayerInteractor : MonoBehaviour, IInteractor
             if (!interactAction.enabled) interactAction.Enable();
             return;
         }else
-        Debug.LogError("PlayerInteractor: No VDGlobal instance or InteractAction found, trying to find action map and action locally.");
+        MessageBox.Show("Khong tim thay InteractAction tu VDGlobal, dang thu tim cuc bo.");
 
         var inputActions = VDGlobal.Instance?.InputActions;
         if (inputActions == null)

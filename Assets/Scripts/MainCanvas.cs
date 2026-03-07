@@ -10,6 +10,14 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private StaticUIController staticUIController;
     [SerializeField] private ScreenTransitonController screenTransitionController;
 
+    [SerializeField] private MessageBox messageBox;
+    [SerializeField] private Notification notification;
+    [SerializeField] private PanelUI panelUI;
+
+    public PanelUI PanelUI=>panelUI;
+    public Notification Notification=> notification;
+
+    public MessageBox MessageBox=>messageBox;
     public ScreenTransitonController ScreenTransitionController => screenTransitionController;
     public StaticUIController StaticUIController => staticUIController;
     private ColorAdjustments  colorAdjustments;
@@ -64,5 +72,9 @@ public class MainCanvas : MonoBehaviour
         {
             colorAdjustments.saturation.value = saturation;
         }
+    }
+    public void RegisterMessageBox(MessageBox mb)
+    {
+        this.messageBox = mb;
     }
 }

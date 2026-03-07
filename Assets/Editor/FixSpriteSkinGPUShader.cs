@@ -22,7 +22,7 @@ public static class FixSpriteSkinGPUShader
 
         if (target == null)
         {
-            Debug.LogError("Couldn't find a suitable target sprite shader (URP 2D Sprite-Lit or Sprites/Default).");
+            MessageBox.Show("Khong tim thay shader dich phu hop de sua SpriteSkin.");
             return;
         }
 

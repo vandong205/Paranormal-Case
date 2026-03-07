@@ -24,10 +24,6 @@ public class ScreenTransitonController : MonoBehaviour
         if (transitionAnimator == null)
         {
             transitionAnimator = GetComponent<Animator>();
-            if (transitionAnimator == null)
-            {
-                Debug.LogError("ScreenTransitionController: No Animator found on the GameObject.");
-            }
         }
     }
 
@@ -35,7 +31,7 @@ public class ScreenTransitonController : MonoBehaviour
     {
         if (transitionAnimator == null)
         {
-            Debug.LogError("ScreenTransitionController: transitionAnimator is null.");
+            MessageBox.Show("Animator chuyen canh chua duoc gan.");
             return;
         }
 

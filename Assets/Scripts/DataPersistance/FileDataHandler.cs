@@ -28,7 +28,7 @@ public class FileDataHandler
             }
             catch (Exception e)
             {
-                Debug.LogError("Error loading game data: " + e.Message);
+                MessageBox.Show("Tai du lieu game that bai: " + e.Message);
             }
         }
         return loadedData;
@@ -47,7 +47,7 @@ public class FileDataHandler
         }
         catch (Exception e)
         {
-            Debug.LogError("Error saving game data: " + e.Message);
+            MessageBox.Show("Luu du lieu game that bai: " + e.Message);
         }
     }
 }

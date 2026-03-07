@@ -10,7 +10,7 @@ public class EntryDoor : MonoBehaviour, IInteracable
         gateManager = FindFirstObjectByType<TeleportGateManager>();
         if (gateManager == null)
         {
-            Debug.LogError("EntryDoor: No TeleportGateManager found in the scene.");
+            MessageBox.Show("Khong tim thay TeleportGateManager trong scene.");
             error = true;
         }
     }

@@ -43,7 +43,7 @@ public class AdminTool : MonoBehaviour
             player = FindFirstObjectByType<Player>();
             if (player == null)
             {
-                Debug.LogError("AdminTool: No Player found in the scene.");
+                MessageBox.Show("Khong tim thay Player trong scene.");
             }else{
                 speedText.text = player.MoveSpeed.ToString("F1");
             }
@@ -172,7 +172,7 @@ public class AdminTool : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError("AdminTool: Failed to save data - " + ex.Message);
+            MessageBox.Show("Luu du lieu AdminTool that bai: " + ex.Message);
         }
     }
     public void SaveGame()
@@ -202,7 +202,7 @@ public class AdminTool : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError("AdminTool: Failed to load data - " + ex.Message);
+            MessageBox.Show("Tai du lieu AdminTool that bai: " + ex.Message);
         }
     }
 }

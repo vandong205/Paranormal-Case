@@ -23,7 +23,7 @@ public class GateController : MonoBehaviour
         if (Manager == null)
         {
             error = true;
-            Debug.LogError("GateController: No TeleportGateManager found in the scene.");
+            MessageBox.Show("Khong tim thay TeleportGateManager trong scene.");
         }
     }
     private void OnTriggerEnter(Collider other)
